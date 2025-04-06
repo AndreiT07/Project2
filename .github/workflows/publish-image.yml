@@ -1,27 +1,15 @@
-name: Docker Image CI
+name: Docker Image CI for GHCR
 
 on:
-  push:
-
-permissions:
-  contents: read
-  packages: write
+  push
 
 jobs:
-  build_and_publish:
+  build_and_publish
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Log in to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push backend
+      - uses: actions/checkout@v3
+      - name: Build and push the image
         run: |
-          docker build ./Backend --tag ghcr.io/andreit07/img_backend:latest
-          docker push ghcr.io/andreit07/img_backend:latest
+          docker login --username andreit07 --password ${{secrets.GH_PAT}} ghcr.io
+          docker build ./Backend --tag ghcr.io/andreit07/test_img:latest
+          docker push ghcr.io/andreit07/test_img:latest
